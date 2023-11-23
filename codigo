@@ -1,0 +1,317 @@
+class Paciente{
+    private String nome; 
+    private int codigo; 
+    private String sexo; 
+    private double peso;
+    private double altura; 
+    private int idade;
+
+    public Paciente (String nome, int codigo, String sexo, double peso, double altura,int idade){
+        this.nome = nome;    
+        this.codigo = codigo; 
+        this.sexo = sexo; 
+        this.peso = peso;
+        this.altura = altura; 
+        this.idade = idade;
+    }
+    
+    public void setNome(String nome){
+        if(nome != null)
+            this.nome = nome;
+    }
+    
+    public String getNome(){
+        return nome;
+    }
+    
+    public void setCodigo(int codigo){
+        this.codigo = codigo;
+    }
+    
+    public int getCodigo(){
+        return codigo;
+    }
+    
+    public void setSexo(String sexo){
+        if(sexo == "F" || sexo == "M")
+            this.sexo=sexo;
+    }
+    
+    public String getSexo(){
+        return sexo;
+    }
+    
+    public void setPeso(double peso){
+        if(peso<=150)
+            this.peso=peso;   
+    }
+    
+    public double getPeso(){
+        return peso;
+    }
+    
+    public void setAltura(double altura){
+        if(altura<=2.5)
+            this.altura=altura;
+    }
+    
+    public double getAltura(){
+        return altura;
+    }
+    
+    public void setIdade(int idade){
+        if(idade<=120)    
+            this.idade= idade;
+    }
+    
+    public int getIdade(){
+        return idade;
+    }
+    
+     public double calcularIMC() {
+        return peso / (altura * altura);
+    }
+
+    public double calcularPesoIdeal() {
+        if (sexo == "M") {
+            return 72.7*altura - 58;
+        } else {
+            return 62.1*altura -44.7;
+        }
+    }
+    
+    public String toString(){
+        String saida = "\nNome do paciente:" +nome+ "codigo"+ codigo+ "seu sexo" +sexo+"seu peso" + peso+ "sua altura" + altura + "sua idade" +idade+ "seu IMC" + calcularIMC() + "seu peso idedal" + calcularPesoIdeal();
+        return saida;
+    }  
+}
+
+
+public class ListaDePacientes {
+    private Paciente[] listaPacientes;
+    private int proximoIndice;
+    
+    public ListaDePacientes(String nome, int tamanho){
+        listaPacientes = new Paciente[tamanho];
+        proximoIndice=0;
+        
+    }
+    
+    public int getProximoIndice(){ 
+        return proximoIndice;
+    }
+    
+    //- método que consulta um paciente por nome;
+    public Paciente consultaPacientePorNome(String nome){
+        if(proximoIndice==0) 
+            return null;
+        for(int i= 0;i<proximoIndice;i++){
+            if(listaPacientes[i].getNome().equalsIgnoreCase(nome))
+                return listaPacientes[i];
+        }
+        return null;
+    }
+    
+    //- método que consulta um paciente por codigo;
+    public Paciente consultaPacientePorCodigo(int codigo){
+        if(proximoIndice==0) 
+            return null;
+        for(int i= 0;i<proximoIndice;i++){
+            if(listaPacientes[i].getCodigo()==codigo)
+                return listaPacientes[i];
+        }
+        return null;
+    }
+    
+    //- método que mostra uma lista de todos os pacientes com idade acima de um valor informado pelo parâmetro;
+    public Paciente[] mostraPacientesIdadeSuperior(int idade){
+        Paciente [] auxiliar = new Paciente[proximoIndice];
+        int proxInd = 0;
+        for(int i=0;i<proximoIndice;i++){
+            if(listaPacientes[i].getIdade()>=idade){
+                auxiliar[proxInd] = listaPacientes[i];
+                proxInd++;
+            }
+        }
+        return auxiliar;
+    }
+    
+    //- método que lista todos os pacientes;
+    public String toString(){
+        String saida = " ";
+        for(int i= 0;i<proximoIndice;i++){
+            saida = saida + listaPacientes[i].toString();
+        }
+        return saida;
+    }
+    
+    //- método que cadastra pacientes na lista. O método deve garantir que nenhum paciente de mesmo nome e codigo sejam adicionados a lista de pacientes.
+    public boolean cadastrarPaciente(Paciente p1){
+        if(proximoIndice==0){
+            listaPacientes[proximoIndice] = p1;
+            proximoIndice++;
+            return true;            
+        }
+        
+        for(int i= 0;i<proximoIndice;i++){
+            if(listaPacientes[i].getCodigo()== p1.getCodigo())
+                return false;
+        }
+        
+        listaPacientes[proximoIndice] = p1;
+        proximoIndice++;
+        return true;  
+    }
+    
+    //- método que altera o peso de um determinado paciente, informando o seu código;
+    public boolean alterarPeso (double peso, int codigo){
+        for (int i= 0; i< proximoIndice; i++){
+            if(listaPacientes[i].getPeso() == peso)
+            listaPacientes[i].setPeso(codigo); 
+            return true; 
+        }
+    }
+    
+    //- método que altera a altura de um determinado paciente, informando o seu código;
+    public boolean alterarAltura (double altura, int codigo){
+        for (int i= 0; i< proximoIndice; i++){
+            if(listaPacientes[i].getAltura() == altura)
+            listaPacientes[i].setAltura(codigo); 
+            return true; 
+        }
+    }  
+
+    //- método que altera o sexo de um determinado paciente, informando seu código;
+    public boolean alterarSexo (String sexo, int codigo){
+        for (int i= 0; i< proximoIndice; i++){
+            if(listaPacientes[i].getSexo() == sexo)
+            listaPacientes[i].setSexo(codigo); 
+            return true; 
+        }
+    }
+    
+    //- método que mostra o IMC de um determinado paciente.
+    public double mostrarIMC (double IMC, int codigo, String nome){
+        double paciente = 0;
+        for(int i= 0;i<proximoIndice;i++){
+            paciente = paciente + listaPacientes[i].calcularIMC();
+        }
+        return paciente;
+    }
+    
+}
+
+
+import java.util.Scanner; 
+public class Aplicação 
+{
+    public static void main(String args[]){
+        Scanner in = new Scanner(System.in);
+        
+        String nome; 
+        int codigo; 
+        String sexo; 
+        double peso;
+        double altura; 
+        int idade;
+        int opcao = 0;
+        int proximoIndice =0;
+        Paciente auxiliar;
+           
+        System.out.print("Digite o tamanho da lista de pacientes:");
+        int tamanho = in.nextInt();
+                
+        ListaDePacientes  lp1 = new Paciente (tamanho);
+        
+        do{
+            menu();
+            System.out.println("Digite a opção desejada: ");
+            opcao = in.nextInt();
+            switch(opcao){
+                case 1: System.out.println("Digite o nome do paciente:");
+                        nome = in.next();
+                        System.out.println("Digite seu código:");
+                        codigo = in.nextInt();
+                        Paciente p1 = new Paciente(nome,codigo);
+                        if(lp1.cadastraPaciente(lp1))
+                            System.out.println("Paciente cadastrado/a");
+                        else
+                            System.out.println("Paciente não cadastrado/a");
+                        break;
+                case 2: System.out.println("Digite o nome do paciente:");
+                        nome = in.next();
+                        auxiliar = lp1.consultaPacientePorNome(nome);
+                        if(auxiliar==null)
+                            System.out.println("Paciente não encontrado");
+                        else
+                            System.out.println(auxiliar.toString());
+                        break;
+                case 3: System.out.println("Digite o código do paciente:");
+                        codigo = in.nextInt();
+                        auxiliar = lp1.consultaPacientePorCodigo(codigo);
+                        if(auxiliar==null)
+                            System.out.println("conta não encontrada com este número");
+                        else
+                            System.out.println(auxiliar.toString());
+                        break;
+                case 4: System.out.println("Digite uma idade para ver todos os pacientes com idade igual ou acima:");
+                        idade = in.nextInt();
+                        Paciente [] listaAuxiliar = lp1.mostraPacientesIdadeSuperior(idade);
+                        System.out.println("Os pacientes com idade igual ou superior a " + idade + "são:\n");
+                        for(int i = 0;i<lp1.getProximoIndice();i++){
+                            System.out.println("\n"+listaAuxiliar[i].toString());
+                        }
+                        break;
+                case 5: System.out.println("Digite o valor a ser sacado:");
+                        valor = in.nextDouble();
+                        System.out.println("Digite o numero da conta:");
+                        numero = in.nextInt();
+                        if(ag.sacar(numero,valor))
+                            System.out.println("Saque feito");
+                        else
+                            System.out.println("Saque não feito");
+                        break;
+                case 6: System.out.println("Digite o valor a ser transferido:");
+                        valor = in.nextDouble();
+                        System.out.println("Digite o numero da conta de origem:");
+                        numero = in.nextInt();
+                        System.out.println("Digite o numero da conta de destino:");
+                        int numeroOutra = in.nextInt();
+                        if(ag.transferir(numero, numeroOutra, valor))
+                            System.out.println("Transferência feita");
+                        else
+                            System.out.println("Transferência não feita");
+                        break;
+                case 7: System.out.println(ag.toString());
+                        break;
+                case 8: System.out.println("Digite o valor do saldo a ser consultado");
+                        valor = in.nextDouble();
+                        Conta[] listaAuxiliar = ag.mostraContasSaldo(valor);
+                        System.out.println("As contas da agência que possuem saldo acima de "+ valor+ " são:\n");
+                        for(int i = 0;i<ag.getProximoIndice();i++){
+                            System.out.println("\n"+listaAuxiliar[i].toString());
+                        }
+                        break;                        
+                case 9: System.out.println("Digite o código do paciente que deseja mostrar o IMC: ");
+                
+                        break;
+                default: System.out.println("Opção invalida");
+                        break;
+            }
+        }while(opcao!=0);
+        System.out.println("Saindo do programa");                
+    }
+                
+    public static void menu(){
+        System.out.println("1 - Cadastrar paciente: ");
+        System.out.println("2 - Consultar paciente por nome: ");
+        System.out.println("3 - Consultar paciente por código: ");
+        System.out.println("4 - Listar pacientes com idade acima de um valor: ");
+        System.out.println("5 - Listar todos os pacientes: ");
+        System.out.println("6 - Alterar altura do paciente por código: ");
+        System.out.println("7 - Alterar altura do paciente por código: ");  
+        System.out.println("8 - Alterar sexo do paciente por código");
+        System.out.println("9 - Mostrar IMC do paciente por código");
+        System.out.println("0 - sair");
+    }
+}
