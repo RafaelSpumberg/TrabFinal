@@ -33,7 +33,7 @@ class Paciente{
     }
     
     public void setSexo(char sexo){
-        if(sexo == 'F' || sexo == 'M')
+        if(sexo == 'F' || sexo == 'M' || sexo == 'f' || sexo == 'm')
             this.sexo=sexo;
     }
     
@@ -60,7 +60,7 @@ class Paciente{
     }
     
     public void setIdade(int idade){
-        if(altura>= 0 && idade<=120)    
+        if(idade>= 0 && idade<=120)    
             this.idade= idade;
     }
     
@@ -81,26 +81,27 @@ class Paciente{
     }
     
     public String toString(){
-        return "\nNome: " + getNome() + "\nCódigo: " + getCodigo() + "\nSexxo: " + getSexo() +
+        return "\nNome: " + getNome() + "\nCódigo: " + getCodigo() + "\nSexo: " + getSexo() +
                 "\nAltura: " + getAltura() + "\nPeso: " + getPeso() + "\nIdade: " + getIdade(); 
     }  
 }
 
 
+
 public class ListaDePacientes {
     private Paciente[] listaPacientes;
     private int proximoIndice;
-    
+
     public ListaDePacientes(String nome, int tamanho){
         listaPacientes = new Paciente[tamanho];
         proximoIndice=0;
-        
+
     }
-    
+
     public int getProximoIndice(){ 
         return proximoIndice;
     }
-    
+
     //- método validar nome do paciente; 
     public boolean validarNome(String nome) {
         if (nome != null && !nome.isEmpty()) 
@@ -109,25 +110,25 @@ public class ListaDePacientes {
         else 
             return false;
     }
-    
+
     //- método validar peso do paciente; 
-     public boolean validarPeso(double peso) {
+    public boolean validarPeso(double peso) {
         if (peso > 0 && peso <= 150)
             return true;
 
         else
             return false;
     }
-    
+
     //- método validar altura do paciente;
-     public boolean validarAltura(double altura) {
+    public boolean validarAltura(double altura) {
         if (altura > 0 && altura <= 2.5)
             return true;
 
         else
             return false;
     }
-    
+
     //- método validar idade do paciente;
     public boolean validarIdade(double idade) {
         if (idade >= 0 && idade <= 120)
@@ -136,8 +137,7 @@ public class ListaDePacientes {
         else
             return false;
     }  
-    
-    
+
     //- método que consulta um paciente por nome;
     public Paciente consultaPacientePorNome(String nome){
         if(proximoIndice==0) 
@@ -148,7 +148,7 @@ public class ListaDePacientes {
         }
         return null;
     }
-    
+
     //- método que consulta um paciente por codigo;
     public Paciente consultaPacientePorCodigo(int codigo){
         if(proximoIndice==0) 
@@ -159,20 +159,20 @@ public class ListaDePacientes {
         }
         return null;
     }
-    
+
     //- método que mostra uma lista de todos os pacientes com idade acima de um valor informado pelo parâmetro;
-    public int[] mostraPacientesIdadeSuperior(int idade){
+    public int[] mostraPacientesIdadeSuperior(int idadeSuperior){
         int [] mostrarPacientes = new int [proximoIndice];
         int proxInd = 0;
         for(int i=0;i<proximoIndice;i++){
-            if(listaPacientes[i].getIdade()>=idade){
+            if(listaPacientes[i].getIdade()>=idadeSuperior){
                 mostrarPacientes[proxInd] = listaPacientes[i].getCodigo();
                 proxInd++;
             }
         }
         return mostrarPacientes;
     }
-    
+
     //- método que lista todos os pacientes;
     public Paciente [] mostrarTodosPacientes (){
         Paciente[] todosPacientes = new Paciente [proximoIndice];
@@ -181,7 +181,7 @@ public class ListaDePacientes {
         }
         return todosPacientes;
     }
-    
+
     //- método que cadastra pacientes na lista. O método deve garantir que nenhum paciente de mesmo nome e codigo sejam adicionados a lista de pacientes.
     public boolean cadastrarPaciente(Paciente p1){
         if(proximoIndice==0){
@@ -189,47 +189,54 @@ public class ListaDePacientes {
             proximoIndice++;
             return true;            
         }
-        
+
         for(int i= 0;i<proximoIndice;i++){
-            if(listaPacientes[i].getCodigo()== p1.getCodigo()) // && lista[i].getNome().equals(p.getNome())) {
+            if(listaPacientes[i].getCodigo()== p1.getCodigo()) 
                 return false;
         }
-        
+
         listaPacientes[proximoIndice] = p1;
         proximoIndice++;
         return true;  
     }
-    
-    //- método que altera o peso de um determinado paciente, informando o seu código;
-    public boolean alterarPeso (double peso, int codigo){
-        for (int i= 0; i< proximoIndice; i++){
-            if(listaPacientes[i].getPeso() == peso)
-            listaPacientes[i].setPeso(codigo); 
-            return true; 
-        }
-        return false; 
-    }
-    
-    //- método que altera a altura de um determinado paciente, informando o seu código;
-    public boolean alterarAltura (double altura, int codigo){
-        for (int i= 0; i< proximoIndice; i++){
-            if(listaPacientes[i].getAltura() == altura)
-            listaPacientes[i].setAltura(codigo); 
-            return true; 
-        }
-        return false; 
-    }  
 
-    //- método que altera o sexo de um determinado paciente, informando seu código;
-    public boolean alterarSexo (char sexo, int codigo){
-        for (int i= 0; i< proximoIndice; i++){
-            if(listaPacientes[i].getSexo() == sexo)
-            listaPacientes[i].setSexo(sexo); 
-            return true; 
+    //- método que altera o peso de um determinado paciente, informando o seu código;
+    public boolean alterarPeso(double peso, int codigo) {
+        Paciente paAuxiliar = consultaPacientePorCodigo(codigo);
+        
+        if(paAuxiliar != null){
+            paAuxiliar.setPeso(peso);
+            return true;
         }
-        return false; 
+        else
+        return false;  
+    }
+
+    //- método que altera a altura de um determinado paciente, informando o seu código;
+    public boolean alterarAltura(double altura, int codigo) {
+        Paciente paAuxiliar = consultaPacientePorCodigo(codigo);
+        
+        if(paAuxiliar != null){
+            paAuxiliar.setAltura(altura);
+            return true;
+        }
+        else
+        return false;  
+    } 
+    
+    //- método que altera o sexo de um determinado paciente, informando seu código;
+    public boolean alterarSexo(char sexo, int codigo) {
+        Paciente paAuxiliar = consultaPacientePorCodigo(codigo);
+        
+        if(paAuxiliar != null){
+            paAuxiliar.setSexo(sexo);
+            return true;
+        }
+        else
+        return false;  
     }
     
+
     //- método que mostra o IMC de um determinado paciente.
     public double mostrarIMC (double IMC, int codigo, String nome){
         double paciente = 0;
@@ -238,7 +245,6 @@ public class ListaDePacientes {
         }
         return paciente;
     }
-    
 }
 
 
@@ -247,106 +253,160 @@ import java.util.Scanner;
 public class Aplicação 
 {
     public static void main(String args[]){      
-       Scanner in = new Scanner(System.in);
-       int codigo, idade, tamanho, opcao = 0;
-       char sexo;
-       double peso, altura;
-       String nome;
-       
+        Scanner in = new Scanner(System.in);
+        int codigo, idade, tamanho, opcao = 0;
+        char sexo;
+        double peso, altura;
+        String nome = "";
 
-       System.out.println("\fDigite o tamanho da lista de pacientes: ");
-       tamanho = in.nextInt();
+        System.out.println("\fDigite o tamanho da lista de pacientes: ");
+        tamanho = in.nextInt();
 
-       ListaDePacientes lp1 = new ListaDePacientes(nome, tamanho);
-                
-       do{
+        ListaDePacientes lp1 = new ListaDePacientes(nome, tamanho);
+
+        do{
             menu();
             System.out.println("Digite a opção desejada: ");
             opcao = in.nextInt();
             switch(opcao){
-                case 1: System.out.println("\nDigite o/a nome do/a paciente:");
-                        nome = in.next();
-                        
-                        System.out.println("\nDigite seu código:");
-                        codigo = in.nextInt();
-                        
-                        System.out.println("\nDigite o/a sexo/a do/a paciente (F/M): ");
-                        sexo = in.next().charAt(0);
+                case 1: System.out.println("Digite o/a nome do/a paciente:");
+                    nome = in.next();
 
-                        System.out.println("\nDigite o/a peso do/a paciente: ");
-                        peso = in.nextDouble();
+                    System.out.println("Digite seu código:");
+                    codigo = in.nextInt();
 
-                        System.out.println("\nDigite a altura do/a paciente: ");
-                        altura = in.nextDouble();
+                    System.out.println("Digite o/a sexo/a do/a paciente (F/M): ");
+                    sexo = in.next().charAt(0);
 
-                        System.out.println("\nDigite a idade do/a paciente: ");
-                        idade = in.nextInt();
-                        
-                        Paciente p1 = new Paciente(nome,codigo,sexo,peso,altura,tamanho);
-                        if(lp1.cadastrarPaciente(p1))
-                            System.out.println("Paciente cadastrado/a");
-                        else
-                            System.out.println("Paciente não cadastrado/a");
-                        break;
-                        
-                case 2: System.out.println("Digite o nome do paciente:");
-                        nome = in.next();
-                        Paciente auxiliar = lp1.consultaPacientePorNome(nome);
-                        if(auxiliar == null)
-                            System.out.println("Paciente não encontrado");
-                        else
-                            System.out.println(auxiliar.toString());
-                        break;
-                        
-                case 3: System.out.println("Digite o código do paciente:");
-                        codigo = in.nextInt();
-                        if(lp1.consultaPacientePorCodigo(codigo) == null)
-                            System.out.println("\nConta não encontrada com este número");
-                        else
-                            System.out.println(lp1.consultaPacientePorCodigo(codigo).toString());
-                        break;                    
-                        
-                case 4: System.out.println("Digite uma idade para ver todos os pacientes com idade igual ou acima:");
-                        idade = in.nextInt();
-                        Paciente [] listaAuxiliar = lp1.mostraPacientesIdadeSuperior(idade);
-                        System.out.println("Os pacientes com idade igual ou superior a " + idade + "são:\n");
-                        for(int i = 0;i<lp1.getProximoIndice();i++){
-                            System.out.println("\n"+listaAuxiliar[i].toString());
+                    System.out.println("Digite o/a peso do/a paciente: ");
+                    peso = in.nextDouble();
+
+                    System.out.println("Digite a altura do/a paciente: ");
+                    altura = in.nextDouble();
+
+                    System.out.println("Digite a idade do/a paciente: ");
+                    idade = in.nextInt();
+
+                    Paciente p1 = new Paciente(nome,codigo,sexo,peso,altura,idade);
+                    if(lp1.cadastrarPaciente(p1))
+                        System.out.println("Paciente cadastrado/a");
+                    else
+                        System.out.println("Paciente não cadastrado/a");
+                    break;
+
+                case 2: System.out.println("Digite o nome do/a paciente:");
+                    nome = in.next();
+                    Paciente auxiliar = lp1.consultaPacientePorNome(nome);
+                    if(auxiliar == null)
+                        System.out.println("Paciente não encontrado/a");
+                    else
+                        System.out.println(auxiliar.toString());
+                    break;
+
+                case 3: System.out.println("Digite o código do/a paciente:");
+                    codigo = in.nextInt();
+                    if(lp1.consultaPacientePorCodigo(codigo) == null)
+                        System.out.println("Este código não existe.");
+                    else
+                        System.out.println(lp1.consultaPacientePorCodigo(codigo).toString());
+                    break;                    
+
+               case 4: System.out.println("Digite uma idade para ver todos os pacientes com idade igual ou superior:");
+                    int idadeSuperior = in.nextInt();
+
+                    int[] pacientesIdadeSuperior = lp1.mostraPacientesIdadeSuperior(idadeSuperior);
+
+                    if (pacientesIdadeSuperior.length > 0) {
+                        for (int i = 0; i < pacientesIdadeSuperior.length; i++) {
+                            int codigoPaciente = pacientesIdadeSuperior[i];
+                            Paciente mostrarPacientes = lp1.consultaPacientePorCodigo(codigoPaciente);
+                            System.out.println(mostrarPacientes.toString());
                         }
-                        break;
-                        
-                case 5: System.out.println("Segue a lista de todos os pacientes");
-                        break;
-                        
-                case 6: System.out.println("Digite o código do paciente que deseja alterar a altura: ");
-                        break;
-                        
-                case 7: System.out.println("Digite o código do paciente que deseja alterar o peso: ");
-                        break;
-                        
-                case 8: System.out.println("Digite o código do paciente que deseja alterar o sexo: ");
-                        break;                        
-                case 9: System.out.println("Digite o código do paciente que deseja mostrar o IMC: ");
-                        break;
-                        
-                default: System.out.println("Opção invalida");
-                        break;
+                    } else {
+                        System.out.println("Não existe paciente com idade superior a " + idadeSuperior + ".");
+                    }
+                    break;
+
+                case 5: 
+                    Paciente [] pt1 = lp1.mostrarTodosPacientes();
+
+                    if (pt1.length > 0) {
+                        for (int i = 0; i<pt1.length; i++) {
+                            System.out.println(pt1[i].toString());
+                        }
+                    }
+                    else 
+                        System.out.println("Nenhum paciente na lista.");
+                    break;
+
+                case 6: System.out.println("Digite o código do paciente: ");
+                    codigo = in.nextInt();
+
+                    System.out.println("Digite o novo peso do paciente: ");
+                    peso = in.nextDouble();
+
+                    if (lp1.alterarPeso(peso, codigo)) 
+                        System.out.println("O peso do/a paciente foi alterado.");
+
+                    else
+                        System.out.println("Peso não alterado.");
+                    break;
+
+                case 7: System.out.println("Digite o código do/a paciente que deseja alterar altura: ");
+                    codigo = in.nextInt();        
+
+                    System.out.println("Digite a nova altura do/a paciente: ");
+                    altura = in.nextDouble();
+
+                    if (lp1.alterarAltura(altura, codigo))
+                        System.out.println("A altura do/a paciente foi alterado.");
+
+                    else
+                        System.out.println("Altura não alterado.");
+                    break;
+
+                case 8: System.out.println("Digite o código do/a paciente que deseja alterar o sexo: ");
+                    codigo = in.nextInt();
+
+                    System.out.println("Digite o novo sexo do/a paciente [F/M]: ");
+                    char novoSexo = in.next().charAt(0);
+
+                    if (lp1.alterarSexo(novoSexo, codigo))
+                        System.out.println("O sexo do/a paciente foi alterado.");
+                    else
+                        System.out.println("Sexo não alterado.");
+                    break;     
+
+                case 9: System.out.println("Digite o código do/a paciente que deseja mostrar o IMC: ");
+                    codigo = in.nextInt();
+
+                    Paciente paciente = lp1.consultaPacientePorCodigo(codigo);
+                    if (paciente == null) 
+                        System.out.println("Paciente não encontrado.");
+
+                    else 
+                        System.out.println("IMC do paciente " + paciente.getNome() + ": " + paciente.calcularIMC());  
+                    break;
+
+                default: System.out.println("Opção inválida");
+                    break;
             }
-       }while(opcao!=0);
-        System.out.println("Saindo do programa");                
+        }while(opcao!=0);
+        System.out.println("Saindo do programa");
     }
-    
+
     public static void menu(){
         System.out.println("1 - Cadastrar paciente: ");
         System.out.println("2 - Consultar paciente por nome: ");
         System.out.println("3 - Consultar paciente por código: ");
-        System.out.println("4 - Listar pacientes com idade acima de um valor: ");
-        System.out.println("5 - Listar todos os pacientes: ");
-        System.out.println("6 - Alterar altura do paciente por código: ");
-        System.out.println("7 - Alterar peso do paciente por código: ");  
-        System.out.println("8 - Alterar sexo do paciente por código");
-        System.out.println("9 - Mostrar IMC do paciente por código");
-        System.out.println("0 - sair");
+        System.out.println("4 - Listar pacientes com idade acima de uma idade: ");
+        System.out.println("5 - Listar todos os/as pacientes: ");
+        System.out.println("6 - Alterar peso do/a paciente por código: ");
+        System.out.println("7 - Alterar altura do/a paciente por código: ");  
+        System.out.println("8 - Alterar sexo do/a paciente por código");
+        System.out.println("9 - Mostrar IMC do/a paciente por código");
+        System.out.println("0 - Sair");
     }
 }
+
  
